@@ -1,4 +1,4 @@
-package ideIDcard.ideIDcard;
+package ideIDcard;
 
 /**
  * Hello world!
