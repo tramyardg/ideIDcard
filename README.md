@@ -1,1 +1,1 @@
-# image-data-extraction-proj
+# Image Data Extraction for ID Cards
