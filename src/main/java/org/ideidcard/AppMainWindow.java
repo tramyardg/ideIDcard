@@ -3,6 +3,7 @@ package org.ideidcard;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Menu;
@@ -18,6 +19,7 @@ public class AppMainWindow {
     protected Group grpImagePreview;
     protected Label lblSelectedImageDirectory;
     protected Label lblSelectedImageDirectorySub;
+    protected Label lblImageHere;
 
     protected Menu menuBar;
     protected Menu fileMenu;
@@ -73,7 +75,11 @@ public class AppMainWindow {
 
 	grpImagePreview = new Group(shell, SWT.NONE);
 	grpImagePreview.setText("Image preview");
-	grpImagePreview.setBounds(10, 10, 493, 421);
+	grpImagePreview.setBounds(10, 10, 519, 421);
+
+	lblImageHere = new Label(grpImagePreview, SWT.NONE);
+	lblImageHere.setBounds(10, 20, 499, 391);
+	lblImageHere.setText("");
 
 	lblSelectedImageDirectory = new Label(shell, SWT.NONE);
 	lblSelectedImageDirectory.setBounds(10, 438, 136, 15);
@@ -102,6 +108,13 @@ public class AppMainWindow {
 	    if (selected != null) {
 		lblSelectedImageDirectorySub.setText(selected);
 		lblSelectedImageDirectorySub.pack();
+
+		Image image = new Image(display, selected);
+		int imgWidth = image.getBounds().width;
+		int imgHeight = image.getBounds().height;
+		Image scaled050 = new Image(display,
+			image.getImageData().scaledTo((int) (imgWidth * 0.5), (int) (imgHeight * 0.5)));
+		lblImageHere.setImage(scaled050);
 	    }
 	}
 
