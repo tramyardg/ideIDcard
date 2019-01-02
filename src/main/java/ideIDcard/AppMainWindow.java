@@ -32,11 +32,19 @@ public class AppMainWindow {
 	Shell shell = new Shell(display, SWT.SHELL_TRIM | SWT.CENTER);
 
 	Menu menuBar = new Menu(shell, SWT.BAR);
+	Menu fileMenu = new Menu(shell, SWT.DROP_DOWN);
+	Menu importMenu = new Menu(shell, SWT.DROP_DOWN);
+
 	MenuItem cascadeFileMenu = new MenuItem(menuBar, SWT.CASCADE);
 	cascadeFileMenu.setText("&File");
-
-	Menu fileMenu = new Menu(shell, SWT.DROP_DOWN);
 	cascadeFileMenu.setMenu(fileMenu);
+
+	MenuItem importImageItem = new MenuItem(fileMenu, SWT.CASCADE);
+	importImageItem.setText("Import image");
+	importImageItem.setMenu(importMenu);
+	MenuItem feedItem = new MenuItem(importMenu, SWT.PUSH);
+	feedItem.setText("&Open...");
+
 	MenuItem exitItem = new MenuItem(fileMenu, SWT.PUSH);
 	exitItem.setText("&Exit");
 
