@@ -1,5 +1,7 @@
 package org.ideidcard;
 
+import java.io.File;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
@@ -9,14 +11,21 @@ import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Shell;
+
+import net.sourceforge.tess4j.ITesseract;
+import net.sourceforge.tess4j.Tesseract;
+import net.sourceforge.tess4j.TesseractException;
+
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Text;
 
 public class AppMainWindow {
 
     protected Display display;
     protected Shell shell;
     protected Group grpImagePreview;
+    protected Group grpExtractedData;
     protected Label lblSelectedImageDirectory;
     protected Label lblSelectedImageDirectorySub;
     protected Label lblImageHere;
@@ -24,6 +33,7 @@ public class AppMainWindow {
     protected Menu menuBar;
     protected Menu fileMenu;
     protected Menu importMenu;
+    private Text extractedText;
 
     /**
      * Launch the application.
@@ -88,6 +98,13 @@ public class AppMainWindow {
 	lblSelectedImageDirectorySub = new Label(shell, SWT.NONE);
 	lblSelectedImageDirectorySub.setBounds(10, 459, 493, 15);
 	lblSelectedImageDirectorySub.setText("");
+	
+	grpExtractedData = new Group(shell, SWT.NONE);
+	grpExtractedData.setText("Extracted data");
+	grpExtractedData.setBounds(535, 10, 383, 421);
+	
+	extractedText = new Text(grpExtractedData, SWT.MULTI | SWT.READ_ONLY | SWT.WRAP | SWT.BORDER);
+	extractedText.setBounds(10, 21, 363, 373);
 
 	while (!shell.isDisposed()) {
 	    if (!display.readAndDispatch()) {
@@ -110,6 +127,9 @@ public class AppMainWindow {
 		lblSelectedImageDirectorySub.pack();
 
 		Image image = new Image(display, selected);
+		
+		extractedText.setText(readImage(selected));
+		
 		int imgWidth = image.getBounds().width;
 		int imgHeight = image.getBounds().height;
 		Image scaled050 = new Image(display,
@@ -130,5 +150,16 @@ public class AppMainWindow {
 	shell.setText("Image Data Extraction Application");
 	shell.open();
 	shell.layout();
+    }
+    
+    private String readImage(String imageLocation) {
+	ITesseract instance = new Tesseract();
+	try {
+	    String imgText = instance.doOCR(new File(imageLocation));
+	    return imgText;
+	} catch (TesseractException e) {
+	    e.getMessage();
+	    return "Error while reading image";
+	}
     }
 }
