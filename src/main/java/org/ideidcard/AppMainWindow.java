@@ -37,11 +37,14 @@ public class AppMainWindow {
      */
     public static void main(String[] args) {
 	try {
-	    AppMainWindow window = new AppMainWindow();
-	    window.run();
-	} catch (Exception e) {
-	    e.printStackTrace();
-	}
+ 	    AppMainWindow window = new AppMainWindow();
+ 	    window.run();
+ 	} catch (Exception e) {
+ 	    e.printStackTrace();
+ 	}
+	
+	// SaveAsTxtFile sa = new SaveAsTxtFile();
+	// sa.createFile("hello my friend");
     }
 
     /**
@@ -59,7 +62,7 @@ public class AppMainWindow {
 	importImageMenuItem();
 	exitMenuItem();
 	saveMenuItem();
-	
+
 	shell.setMenuBar(menuBar);
 	createContents(shell);
 
@@ -147,7 +150,7 @@ public class AppMainWindow {
 	openImageItem.setAccelerator(SWT.CTRL + 'O');
 	openImageItem.addSelectionListener(new SelectImage());
     }
-    
+
     private void saveMenuItem() {
 	MenuItem mnSaveExtracted = new MenuItem(menuBar, SWT.CASCADE);
 	mnSaveExtracted.setText("&Save");
