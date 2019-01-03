@@ -1,7 +1,5 @@
 package org.ideidcard;
 
-import java.io.File;
-
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
@@ -11,10 +9,6 @@ import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Shell;
-
-import net.sourceforge.tess4j.ITesseract;
-import net.sourceforge.tess4j.Tesseract;
-import net.sourceforge.tess4j.TesseractException;
 
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
@@ -33,6 +27,7 @@ public class AppMainWindow {
     protected Menu menuBar;
     protected Menu fileMenu;
     protected Menu importMenu;
+    protected Menu saveMenu;
     private Text extractedText;
 
     /**
@@ -55,56 +50,42 @@ public class AppMainWindow {
     public void run() {
 	display = new Display();
 	shell = new Shell(display, SWT.SHELL_TRIM);
-
 	menuBar = new Menu(shell, SWT.BAR);
 	fileMenu = new Menu(shell, SWT.DROP_DOWN);
 	importMenu = new Menu(shell, SWT.DROP_DOWN);
+	saveMenu = new Menu(shell, SWT.DROP_DOWN);
 
-	MenuItem cascadeFileMenu = new MenuItem(menuBar, SWT.CASCADE);
-	cascadeFileMenu.setText("&File");
-	cascadeFileMenu.setMenu(fileMenu);
-
-	MenuItem importImageItem = new MenuItem(fileMenu, SWT.CASCADE);
-	importImageItem.setText("Import image");
-	importImageItem.setMenu(importMenu);
-	MenuItem openImageItem = new MenuItem(importMenu, SWT.PUSH);
-	openImageItem.setText("&Open\tCTRL+O");
-	openImageItem.setAccelerator(SWT.CTRL + 'O');
-	openImageItem.addSelectionListener(new SelectImage());
-
-	MenuItem exitItem = new MenuItem(fileMenu, SWT.PUSH);
-	exitItem.setText("&Exit");
-
+	mainMenuFile();
+	importImageMenuItem();
+	exitMenuItem();
+	saveMenuItem();
+	
 	shell.setMenuBar(menuBar);
-	exitItem.addListener(SWT.Selection, event -> {
-	    shell.getDisplay().dispose();
-	    System.exit(0);
-	});
-
 	createContents(shell);
 
 	grpImagePreview = new Group(shell, SWT.NONE);
 	grpImagePreview.setText("Image preview");
-	grpImagePreview.setBounds(10, 10, 519, 421);
+	grpImagePreview.setBounds(10, 10, 519, 383);
 
 	lblImageHere = new Label(grpImagePreview, SWT.NONE);
-	lblImageHere.setBounds(10, 20, 499, 391);
+	lblImageHere.setAlignment(SWT.CENTER);
+	lblImageHere.setBounds(10, 20, 499, 355);
 	lblImageHere.setText("");
 
 	lblSelectedImageDirectory = new Label(shell, SWT.NONE);
-	lblSelectedImageDirectory.setBounds(10, 438, 136, 15);
+	lblSelectedImageDirectory.setBounds(10, 411, 136, 15);
 	lblSelectedImageDirectory.setText("Selected image directory");
 
 	lblSelectedImageDirectorySub = new Label(shell, SWT.NONE);
-	lblSelectedImageDirectorySub.setBounds(10, 459, 493, 15);
+	lblSelectedImageDirectorySub.setBounds(10, 432, 493, 15);
 	lblSelectedImageDirectorySub.setText("");
-	
+
 	grpExtractedData = new Group(shell, SWT.NONE);
 	grpExtractedData.setText("Extracted data");
-	grpExtractedData.setBounds(535, 10, 383, 421);
-	
+	grpExtractedData.setBounds(535, 10, 383, 383);
+
 	extractedText = new Text(grpExtractedData, SWT.MULTI | SWT.READ_ONLY | SWT.WRAP | SWT.BORDER);
-	extractedText.setBounds(10, 21, 363, 373);
+	extractedText.setBounds(10, 21, 363, 353);
 
 	while (!shell.isDisposed()) {
 	    if (!display.readAndDispatch()) {
@@ -127,9 +108,8 @@ public class AppMainWindow {
 		lblSelectedImageDirectorySub.pack();
 
 		Image image = new Image(display, selected);
-		
-		extractedText.setText(readImage(selected));
-		
+		extractedText.setText(ReadImageData.readImage(selected));
+
 		int imgWidth = image.getBounds().width;
 		int imgHeight = image.getBounds().height;
 		Image scaled050 = new Image(display,
@@ -151,15 +131,37 @@ public class AppMainWindow {
 	shell.open();
 	shell.layout();
     }
+
+    private void mainMenuFile() {
+	MenuItem cascadeFileMenu = new MenuItem(menuBar, SWT.CASCADE);
+	cascadeFileMenu.setText("&File");
+	cascadeFileMenu.setMenu(fileMenu);
+    }
+
+    private void importImageMenuItem() {
+	MenuItem importImageItem = new MenuItem(fileMenu, SWT.CASCADE);
+	importImageItem.setText("Import image");
+	importImageItem.setMenu(importMenu);
+	MenuItem openImageItem = new MenuItem(importMenu, SWT.PUSH);
+	openImageItem.setText("&Open\tCTRL+O");
+	openImageItem.setAccelerator(SWT.CTRL + 'O');
+	openImageItem.addSelectionListener(new SelectImage());
+    }
     
-    private String readImage(String imageLocation) {
-	ITesseract instance = new Tesseract();
-	try {
-	    String imgText = instance.doOCR(new File(imageLocation));
-	    return imgText;
-	} catch (TesseractException e) {
-	    e.getMessage();
-	    return "Error while reading image";
-	}
+    private void saveMenuItem() {
+	MenuItem mnSaveExtracted = new MenuItem(menuBar, SWT.CASCADE);
+	mnSaveExtracted.setText("&Save");
+	mnSaveExtracted.setMenu(saveMenu);
+	MenuItem saveAsText = new MenuItem(saveMenu, SWT.PUSH);
+	saveAsText.setText("&Save as text file");
+    }
+
+    private void exitMenuItem() {
+	MenuItem exitItem = new MenuItem(fileMenu, SWT.PUSH);
+	exitItem.setText("&Exit");
+	exitItem.addListener(SWT.Selection, event -> {
+	    shell.getDisplay().dispose();
+	    System.exit(0);
+	});
     }
 }
