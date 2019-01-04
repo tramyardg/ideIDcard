@@ -23,8 +23,9 @@ public class SaveAsTxtFile {
     }
 
     public void createFile(String txt) {
-	byte data[] = txt.getBytes();
-	Path p = Paths.get("./data.log/" + timestampFileName());
+	String timestampFN = timestampFileName();
+	byte data[] = (timestampFN + "\n" + txt).getBytes();
+	Path p = Paths.get("./data.log/" + timestampFN);
 	// for append: Files.newOutputStream(p, CREATE, APPEND))) {
 	try (OutputStream out = new BufferedOutputStream(Files.newOutputStream(p, CREATE))) {
 	    out.write(data, 0, data.length);
