@@ -23,8 +23,7 @@ public class SaveAsTxtFile {
     }
 
     public void createFile(String txt) {
-	String s = "hello theres";
-	byte data[] = s.getBytes();
+	byte data[] = txt.getBytes();
 	Path p = Paths.get("./data.log/" + timestampFileName());
 	// for append: Files.newOutputStream(p, CREATE, APPEND))) {
 	try (OutputStream out = new BufferedOutputStream(Files.newOutputStream(p, CREATE))) {

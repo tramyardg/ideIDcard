@@ -1,6 +1,7 @@
 package org.ideidcard;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Image;
@@ -8,6 +9,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
+import org.eclipse.swt.widgets.ProgressBar;
 import org.eclipse.swt.widgets.Shell;
 
 import org.eclipse.swt.widgets.Group;
@@ -23,12 +25,15 @@ public class AppMainWindow {
     protected Label lblSelectedImageDirectory;
     protected Label lblSelectedImageDirectorySub;
     protected Label lblImageHere;
+    protected ProgressBar progressBar;
 
     protected Menu menuBar;
     protected Menu fileMenu;
     protected Menu importMenu;
     protected Menu saveMenu;
     private Text extractedText;
+    private MenuItem mnExtract;
+    private MenuItem mnSaveExtracted;
 
     /**
      * Launch the application.
@@ -37,14 +42,11 @@ public class AppMainWindow {
      */
     public static void main(String[] args) {
 	try {
- 	    AppMainWindow window = new AppMainWindow();
- 	    window.run();
- 	} catch (Exception e) {
- 	    e.printStackTrace();
- 	}
-	
-	// SaveAsTxtFile sa = new SaveAsTxtFile();
-	// sa.createFile("hello my friend");
+	    AppMainWindow window = new AppMainWindow();
+	    window.run();
+	} catch (Exception e) {
+	    e.printStackTrace();
+	}
     }
 
     /**
@@ -72,15 +74,15 @@ public class AppMainWindow {
 
 	lblImageHere = new Label(grpImagePreview, SWT.NONE);
 	lblImageHere.setAlignment(SWT.CENTER);
-	lblImageHere.setBounds(10, 20, 499, 355);
+	lblImageHere.setBounds(10, 20, 499, 353);
 	lblImageHere.setText("");
 
 	lblSelectedImageDirectory = new Label(shell, SWT.NONE);
-	lblSelectedImageDirectory.setBounds(10, 411, 136, 15);
+	lblSelectedImageDirectory.setBounds(10, 399, 136, 15);
 	lblSelectedImageDirectory.setText("Selected image directory");
 
 	lblSelectedImageDirectorySub = new Label(shell, SWT.NONE);
-	lblSelectedImageDirectorySub.setBounds(10, 432, 493, 15);
+	lblSelectedImageDirectorySub.setBounds(10, 420, 519, 15);
 	lblSelectedImageDirectorySub.setText("");
 
 	grpExtractedData = new Group(shell, SWT.NONE);
@@ -107,11 +109,18 @@ public class AppMainWindow {
 	    openImageDialog.setFilterExtensions(filterExt);
 	    String selected = openImageDialog.open();
 	    if (selected != null) {
+		mnExtract.setEnabled(true);
 		lblSelectedImageDirectorySub.setText(selected);
 		lblSelectedImageDirectorySub.pack();
-
 		Image image = new Image(display, selected);
-		extractedText.setText(ReadImageData.readImage(selected));
+
+		mnExtract.addSelectionListener(new SelectionAdapter() {
+		    @Override
+		    public void widgetSelected(SelectionEvent e) {
+			extractedText.setText(ReadImageData.readImage(selected));
+			mnSaveExtracted.setEnabled(true);
+		    }
+		});
 
 		int imgWidth = image.getBounds().width;
 		int imgHeight = image.getBounds().height;
@@ -151,12 +160,30 @@ public class AppMainWindow {
 	openImageItem.addSelectionListener(new SelectImage());
     }
 
+    class SaveExtractedListener implements SelectionListener {
+	@Override
+	public void widgetDefaultSelected(SelectionEvent arg0) {
+	}
+
+	@Override
+	public void widgetSelected(SelectionEvent arg0) {
+	    SaveAsTxtFile saveTxt = new SaveAsTxtFile();
+	    saveTxt.createFile(lblSelectedImageDirectorySub.getText() + "\n" + extractedText.getText());
+	}
+    }
+
     private void saveMenuItem() {
-	MenuItem mnSaveExtracted = new MenuItem(menuBar, SWT.CASCADE);
+	mnExtract = new MenuItem(menuBar, SWT.PUSH);
+	mnExtract.setText("Extract");
+	mnExtract.setEnabled(false);
+
+	mnSaveExtracted = new MenuItem(menuBar, SWT.CASCADE);
 	mnSaveExtracted.setText("&Save");
 	mnSaveExtracted.setMenu(saveMenu);
+	mnSaveExtracted.setEnabled(false);
 	MenuItem saveAsText = new MenuItem(saveMenu, SWT.PUSH);
 	saveAsText.setText("&Save as text file");
+	saveAsText.addSelectionListener(new SaveExtractedListener());
     }
 
     private void exitMenuItem() {
