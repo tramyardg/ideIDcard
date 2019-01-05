@@ -91,9 +91,6 @@ public class ImageDataCSV {
 
     private List<String[]> toStringArray(List<ImageData> imgDataList) {
 	List<String[]> records = new ArrayList<>();
-	// adding header record
-	records.add(new String[] { "id", "dateProcessed", "imagePath", "imageContent" });
-
 	Iterator<ImageData> it = imgDataList.iterator();
 	while (it.hasNext()) {
 	    ImageData imgData = it.next();

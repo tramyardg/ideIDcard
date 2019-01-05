@@ -13,8 +13,7 @@ public class ReadImageData {
     public static String readImage(String imageLocation) {
 	ITesseract instance = new Tesseract();
 	try {
-	    String imgText = instance.doOCR(new File(imageLocation));
-	    return imgText;
+	    return instance.doOCR(new File(imageLocation));
 	} catch (TesseractException e) {
 	    e.getMessage();
 	    return "Error while reading image";
