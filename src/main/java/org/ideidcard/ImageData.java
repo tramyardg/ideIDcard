@@ -1,11 +1,27 @@
 package org.ideidcard;
 
 public class ImageData {
-
+  
     private String id;
     private String dateProcessed;
     private String imagePath;
     private String imageContent;
+
+    public ImageData() {
+    }
+
+    public ImageData(String dateProcessed, String imagePath, String imageContent) {
+	this.dateProcessed = dateProcessed;
+	this.imagePath = imagePath;
+	this.imageContent = imageContent;
+    }
+
+    public ImageData(String id, String dateProcessed, String imagePath, String imageContent) {
+	this.id = id;
+	this.dateProcessed = dateProcessed;
+	this.imagePath = imagePath;
+	this.imageContent = imageContent;
+    }
 
     public String getId() {
 	return id;

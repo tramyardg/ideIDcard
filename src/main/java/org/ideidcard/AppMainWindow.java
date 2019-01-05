@@ -1,5 +1,9 @@
 package org.ideidcard;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.logging.Logger;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -18,6 +22,8 @@ import org.eclipse.swt.widgets.Text;
 
 public class AppMainWindow {
 
+    private static final Logger LOGGER = Logger.getLogger(AppMainWindow.class.getName());
+    
     protected Display display;
     protected Shell shell;
     protected Group grpImagePreview;
@@ -160,15 +166,46 @@ public class AppMainWindow {
 	openImageItem.addSelectionListener(new SelectImage());
     }
 
-    class SaveExtractedListener implements SelectionListener {
+    class SaveAsTxtListener implements SelectionListener {
 	@Override
 	public void widgetDefaultSelected(SelectionEvent arg0) {
 	}
 
 	@Override
 	public void widgetSelected(SelectionEvent arg0) {
-	    SaveAsTxtFile saveTxt = new SaveAsTxtFile();
-	    saveTxt.createFile(lblSelectedImageDirectorySub.getText() + "\n" + extractedText.getText());
+	    SaveAs saveTxt = new SaveAs();
+	    String fileName = Util.timestampFileName() + "\n";
+	    String path = Util.replaceBacklashWithDouble(lblSelectedImageDirectorySub.getText()) + "\n";
+	    String content = extractedText.getText();
+	    saveTxt.saveDataAs((fileName + path + content), false);
+	}
+    }
+
+    class SaveAsCSVListener implements SelectionListener {
+	@Override
+	public void widgetDefaultSelected(SelectionEvent arg0) {
+	}
+
+	@Override
+	public void widgetSelected(SelectionEvent arg0) {
+	    String fileName = Util.timestampFileName();
+	    String dateProcessed = fileName.substring(0, fileName.indexOf(".")).trim();
+	    String path = lblSelectedImageDirectorySub.getText();
+	    String content = extractedText.getText();
+	    
+	    ImageData data = new ImageData();
+	    data.setId("4");
+	    data.setDateProcessed(dateProcessed);
+	    data.setImagePath(path);
+	    data.setImageContent(content);
+	    
+	    List<ImageData> imgDataList = new ArrayList<>();
+	    imgDataList.add(data);
+	    
+	    SaveAs saveAsCSV = new SaveAs();
+	    saveAsCSV.saveDataAs((new ImageDataCSV().writer(imgDataList).toString()), true);
+	    
+	    LOGGER.info(data.toString());
 	}
     }
 
@@ -183,7 +220,11 @@ public class AppMainWindow {
 	mnSaveExtracted.setEnabled(false);
 	MenuItem saveAsText = new MenuItem(saveMenu, SWT.PUSH);
 	saveAsText.setText("&Save as text file");
-	saveAsText.addSelectionListener(new SaveExtractedListener());
+	saveAsText.addSelectionListener(new SaveAsTxtListener());
+
+	MenuItem saveAsCSV = new MenuItem(saveMenu, SWT.PUSH);
+	saveAsCSV.setText("&Save as CSV");
+	saveAsCSV.addSelectionListener(new SaveAsCSVListener());
     }
 
     private void exitMenuItem() {
