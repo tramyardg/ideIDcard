@@ -11,7 +11,11 @@ import java.util.logging.Logger;
 
 public class Utils {
     private static final Logger LOGGER = Logger.getLogger(Utils.class.getName());
-    
+
+    private Utils() {
+	throw new IllegalStateException("Utility class");
+    }
+
     static String timestampFileName() {
 	String fileName = new SimpleDateFormat("yyyyMMddHHmmss'.txt'").format(new Date());
 	String yyyy = fileName.substring(0, 4);
@@ -20,11 +24,11 @@ public class Utils {
 	String dd = fileName.substring(yLength + 2, yLength + 4);
 	return yyyy + "-" + mt + "-" + dd + "-" + fileName.substring(8);
     }
-    
+
     static String replaceBacklashWithDouble(String p) {
 	return p.replace("\\", "\\\\");
     }
-    
+
     static int getLineNumberCSV(String location) {
 	Path path = null;
 	try {
@@ -36,5 +40,5 @@ public class Utils {
 	    return -1;
 	}
     }
-    
+
 }

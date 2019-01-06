@@ -3,6 +3,7 @@ package org.ideidcard;
 import static java.nio.file.StandardOpenOption.CREATE;
 
 import java.io.BufferedOutputStream;
+import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.file.Files;
@@ -28,6 +29,10 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
+
+import net.sourceforge.tess4j.ITesseract;
+import net.sourceforge.tess4j.Tesseract;
+import net.sourceforge.tess4j.TesseractException;
 
 public class AppMainWindow {
 
@@ -114,6 +119,16 @@ public class AppMainWindow {
 	}
     }
 
+    private String readImage(String imageLocation) {
+	ITesseract instance = new Tesseract();
+	try {
+	    return instance.doOCR(new File(imageLocation));
+	} catch (TesseractException e) {
+	    e.getMessage();
+	    return "Error while reading image";
+	}
+    }
+    
     class SelectImage implements SelectionListener {
 	public void widgetSelected(SelectionEvent event) {
 	    FileDialog openImageDialog = new FileDialog(shell, SWT.OPEN);
@@ -132,7 +147,7 @@ public class AppMainWindow {
 		mnExtract.addSelectionListener(new SelectionAdapter() {
 		    @Override
 		    public void widgetSelected(SelectionEvent e) {
-			extractedText.setText(ReadImageData.readImage(selected));
+			extractedText.setText(readImage(selected));
 			mnSaveExtracted.setEnabled(true);
 		    }
 		});
@@ -145,7 +160,9 @@ public class AppMainWindow {
 	    }
 	}
 
+	@Override
 	public void widgetDefaultSelected(SelectionEvent event) {
+	    throw new UnsupportedOperationException();
 	}
     }
 
@@ -178,6 +195,7 @@ public class AppMainWindow {
     class SaveAsTxtListener implements SelectionListener {
 	@Override
 	public void widgetDefaultSelected(SelectionEvent arg0) {
+	    throw new UnsupportedOperationException();
 	}
 
 	@Override
@@ -200,6 +218,7 @@ public class AppMainWindow {
     class SaveAsCSVListener implements SelectionListener {
 	@Override
 	public void widgetDefaultSelected(SelectionEvent arg0) {
+	    throw new UnsupportedOperationException();
 	}
 
 	@Override
