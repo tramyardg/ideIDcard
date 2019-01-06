@@ -1,7 +1,12 @@
 package org.ideidcard;
 
+import static java.nio.file.StandardOpenOption.APPEND;
+import static java.nio.file.StandardOpenOption.CREATE;
+
+import java.io.BufferedOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.io.StringWriter;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -19,20 +24,8 @@ import com.opencsv.bean.HeaderColumnNameMappingStrategy;
 
 public class ImageDataCSV {
 
-    private static final Logger LOGGER = Logger.getLogger(ImageDataCSV.class.getName());
-    public static final String CSV_DATA_PATH = "./data.log/testcsv3.csv";
-
-    public static int getLineNumberCSV() {
-	Path path = null;
-	try {
-	    path = Paths.get(CSV_DATA_PATH);
-	    // skip(1L) skips header
-	    return (int) Files.lines(path).skip(1L).count();
-	} catch (IOException e) {
-	    LOGGER.log(Level.WARNING, "Exception found!", e);
-	    return -1;
-	}
-    }
+    private final Logger LOGGER = Logger.getLogger(ImageDataCSV.class.getName());
+    private final String CSV_DATA_PATH = "./data.log/testcsv3.csv";
 
     public void csvToBean() {
 	CSVReader reader = null;
@@ -114,6 +107,18 @@ public class ImageDataCSV {
 	}
     }
 
+    public void saveDataAsCSV(String str) {
+	byte[] data = str.getBytes();
+	Path p = null;
+	p = Paths.get(CSV_DATA_PATH);
+	try (OutputStream out = new BufferedOutputStream(Files.newOutputStream(p, CREATE, APPEND))) {
+	    out.write(data, 0, data.length);
+	} catch (IOException x) {
+	    LOGGER.log(Level.WARNING, "Exception found!", x);
+	}
+    }
+
+    @SuppressWarnings("unused")
     private List<ImageData> getExampleData() {
 	List<ImageData> imgDataList = new ArrayList<>();
 

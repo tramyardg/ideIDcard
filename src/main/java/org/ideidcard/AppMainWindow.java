@@ -1,7 +1,16 @@
 package org.ideidcard;
 
+import static java.nio.file.StandardOpenOption.CREATE;
+
+import java.io.BufferedOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.eclipse.swt.SWT;
@@ -23,7 +32,7 @@ import org.eclipse.swt.widgets.Text;
 public class AppMainWindow {
 
     private static final Logger LOGGER = Logger.getLogger(AppMainWindow.class.getName());
-    
+
     protected Display display;
     protected Shell shell;
     protected Group grpImagePreview;
@@ -113,7 +122,7 @@ public class AppMainWindow {
 	    openImageDialog.setFilterPath(homeDir);
 	    String[] filterExt = { "*.JPG", "*.PNG", "*.GIF", "*.BMP" };
 	    openImageDialog.setFilterExtensions(filterExt);
-	    String selected = openImageDialog.open();
+	    final String selected = openImageDialog.open();
 	    if (selected != null) {
 		mnExtract.setEnabled(true);
 		lblSelectedImageDirectorySub.setText(selected);
@@ -173,11 +182,18 @@ public class AppMainWindow {
 
 	@Override
 	public void widgetSelected(SelectionEvent arg0) {
-	    SaveAs saveTxt = new SaveAs();
-	    String fileName = Util.timestampFileName() + "\n";
-	    String path = Util.replaceBacklashWithDouble(lblSelectedImageDirectorySub.getText()) + "\n";
+	    String fileName = Utils.timestampFileName() + "\n";
+	    String path = Utils.replaceBacklashWithDouble(lblSelectedImageDirectorySub.getText()) + "\n";
 	    String content = extractedText.getText();
-	    saveTxt.saveDataAs((fileName + path + content), false);
+
+	    byte[] data = (fileName + path + content).getBytes();
+	    Path p = null;
+	    p = Paths.get("./data.log/" + Utils.timestampFileName());
+	    try (OutputStream out = new BufferedOutputStream(Files.newOutputStream(p, CREATE))) {
+		out.write(data, 0, data.length);
+	    } catch (IOException x) {
+		LOGGER.log(Level.WARNING, "Exception found!", x);
+	    }
 	}
     }
 
@@ -188,23 +204,23 @@ public class AppMainWindow {
 
 	@Override
 	public void widgetSelected(SelectionEvent arg0) {
-	    String fileName = Util.timestampFileName();
+	    String fileName = Utils.timestampFileName();
 	    String dateProcessed = fileName.substring(0, fileName.indexOf(".")).trim();
 	    String path = lblSelectedImageDirectorySub.getText();
 	    String content = extractedText.getText();
-	    
+
 	    ImageData data = new ImageData();
 	    data.setId("4");
 	    data.setDateProcessed(dateProcessed);
 	    data.setImagePath(path);
 	    data.setImageContent(content);
-	    
+
 	    List<ImageData> imgDataList = new ArrayList<>();
 	    imgDataList.add(data);
-	    
-	    SaveAs saveAsCSV = new SaveAs();
-	    saveAsCSV.saveDataAs((new ImageDataCSV().writer(imgDataList).toString()), true);
-	    
+
+	    ImageDataCSV imgToCSV = new ImageDataCSV();
+	    imgToCSV.saveDataAsCSV(imgToCSV.writer(imgDataList).toString());
+
 	    LOGGER.info(data.toString());
 	}
     }

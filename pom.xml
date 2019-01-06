@@ -36,5 +36,10 @@
 			<artifactId>opencsv</artifactId>
 			<version>3.8</version>
 		</dependency>
+		<dependency>
+			<groupId>org.openpnp</groupId>
+			<artifactId>opencv</artifactId>
+			<version>3.4.2-1</version>
+		</dependency>
 	</dependencies>
 </project>
