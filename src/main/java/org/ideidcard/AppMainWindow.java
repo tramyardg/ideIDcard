@@ -36,7 +36,7 @@ import net.sourceforge.tess4j.TesseractException;
 
 public class AppMainWindow {
 
-    private static final Logger LOGGER = Logger.getLogger(AppMainWindow.class.getName());
+    private final Logger logger = Logger.getLogger(AppMainWindow.class.getName());
 
     protected Display display;
     protected Shell shell;
@@ -210,7 +210,7 @@ public class AppMainWindow {
 	    try (OutputStream out = new BufferedOutputStream(Files.newOutputStream(p, CREATE))) {
 		out.write(data, 0, data.length);
 	    } catch (IOException x) {
-		LOGGER.log(Level.WARNING, "Exception found!", x);
+		logger.log(Level.WARNING, "Exception found!", x);
 	    }
 	}
     }
@@ -244,7 +244,7 @@ public class AppMainWindow {
 	    ImageDataCSV imgToCSV = new ImageDataCSV();
 	    imgToCSV.saveDataAsCSV(imgToCSV.writer(imgDataList).toString());
 
-	    LOGGER.info(data.toString());
+	    logger.info(data.toString());
 	}
     }
 

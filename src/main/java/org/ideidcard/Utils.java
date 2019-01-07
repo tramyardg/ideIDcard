@@ -10,7 +10,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class Utils {
-    private static final Logger LOGGER = Logger.getLogger(Utils.class.getName());
+    private static final Logger logger = Logger.getLogger(Utils.class.getName());
 
     private Utils() {
 	throw new IllegalStateException("Utility class");
@@ -36,7 +36,7 @@ public class Utils {
 	    // skip(1L) skips header
 	    return (int) Files.lines(path).skip(1L).count();
 	} catch (IOException e) {
-	    LOGGER.log(Level.WARNING, "Exception found!", e);
+	    logger.log(Level.WARNING, "Exception found!", e);
 	    return -1;
 	}
     }

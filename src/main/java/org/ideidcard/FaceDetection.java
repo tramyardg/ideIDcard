@@ -17,9 +17,9 @@ import org.opencv.imgproc.Imgproc;
 import org.opencv.objdetect.CascadeClassifier;
 
 public class FaceDetection {
-    private final Logger LOGGER = Logger.getLogger(FaceDetection.class.getName());
-    private final String CASECADE_CLASSIFIER_XML = "haarcascade_frontalface_alt.xml";
-    private final String CROPPED_IMG_PATH = "./data.log/cropped.images/";
+    private final Logger logger = Logger.getLogger(FaceDetection.class.getName());
+    private static final String CASECADE_CLASSIFIER_XML = "haarcascade_frontalface_alt.xml";
+    private static final String CROPPED_IMG_PATH = "./data.log/cropped.images/";
 
     private String imageSrcPath;
     private String croppedImageName;
@@ -36,7 +36,7 @@ public class FaceDetection {
 	CascadeClassifier faceDetector = new CascadeClassifier();
 	faceDetector.load(CASECADE_CLASSIFIER_XML);
 
-	LOGGER.info(imageSrcPath);
+	logger.info(imageSrcPath);
 
 	// Input image
 	Mat image = Imgcodecs.imread(imageSrcPath);
@@ -63,10 +63,10 @@ public class FaceDetection {
 	try {
 	    bytes = FileUtils.readFileToByteArray(new File(CROPPED_IMG_PATH + croppedImageName));
 	} catch (IOException e) {
-	    LOGGER.log(Level.WARNING, "Exception found!", e);
+	    logger.log(Level.WARNING, "Exception found!", e);
 	}
 	String encodedData = Base64.getEncoder().encodeToString(bytes);
-	LOGGER.info(encodedData);
+	logger.info(encodedData);
 	return encodedData;
     }
 }

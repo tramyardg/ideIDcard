@@ -24,8 +24,8 @@ import com.opencsv.bean.HeaderColumnNameMappingStrategy;
 
 public class ImageDataCSV {
 
-    private final Logger LOGGER = Logger.getLogger(ImageDataCSV.class.getName());
-    private final String CSV_DATA_PATH = "./data.log/csvdata.csv";
+    private final Logger logger = Logger.getLogger(ImageDataCSV.class.getName());
+    private static final String CSV_DATA_PATH = "./data.log/csvdata.csv";
 
     public void csvToBean() {
 	CSVReader reader = null;
@@ -40,12 +40,12 @@ public class ImageDataCSV {
 	    System.out.println(imgDataList);
 
 	} catch (IOException e) {
-	    LOGGER.log(Level.WARNING, "Exception found!", e);
+	    logger.log(Level.WARNING, "Exception found!", e);
 	} finally {
 	    try {
 		reader.close();
 	    } catch (NullPointerException | IOException e) {
-		LOGGER.log(Level.WARNING, "Exception found!", e);
+		logger.log(Level.WARNING, "Exception found!", e);
 	    }
 	}
     }
@@ -72,12 +72,12 @@ public class ImageDataCSV {
 	    System.out.println(imgDataList);
 
 	} catch (IOException e) {
-	    LOGGER.log(Level.WARNING, "Exception found!", e);
+	    logger.log(Level.WARNING, "Exception found!", e);
 	} finally {
 	    try {
 		reader.close();
 	    } catch (IOException e) {
-		LOGGER.log(Level.WARNING, "Exception found!", e);
+		logger.log(Level.WARNING, "Exception found!", e);
 	    }
 	}
     }
@@ -102,7 +102,7 @@ public class ImageDataCSV {
 	    csvWriter.close();
 	    return writer;
 	} catch (IOException e) {
-	    LOGGER.log(Level.WARNING, "Exception found!", e);
+	    logger.log(Level.WARNING, "Exception found!", e);
 	    return null;
 	}
     }
@@ -114,7 +114,7 @@ public class ImageDataCSV {
 	try (OutputStream out = new BufferedOutputStream(Files.newOutputStream(p, CREATE, APPEND))) {
 	    out.write(data, 0, data.length);
 	} catch (IOException x) {
-	    LOGGER.log(Level.WARNING, "Exception found!", x);
+	    logger.log(Level.WARNING, "Exception found!", x);
 	}
     }
 
