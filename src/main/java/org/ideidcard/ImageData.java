@@ -64,8 +64,8 @@ public class ImageData {
 	return croppedImg;
     }
 
-    public void setCroppedImg(String croppedImg) {
-	this.croppedImg = croppedImg;
+    public void setCroppedImg(String croppedImgBase64) {
+	this.croppedImg = croppedImgBase64;
     }
     
     @Override

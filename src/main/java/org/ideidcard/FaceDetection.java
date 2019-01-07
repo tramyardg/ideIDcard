@@ -3,6 +3,8 @@ package org.ideidcard;
 import java.io.File;
 import java.io.IOException;
 import java.util.Base64;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.apache.commons.io.FileUtils;
 import org.opencv.core.Mat;
@@ -15,15 +17,29 @@ import org.opencv.imgproc.Imgproc;
 import org.opencv.objdetect.CascadeClassifier;
 
 public class FaceDetection {
+    private final Logger LOGGER = Logger.getLogger(FaceDetection.class.getName());
+    private final String CASECADE_CLASSIFIER_XML = "haarcascade_frontalface_alt.xml";
+    private final String CROPPED_IMG_PATH = "./data.log/cropped.images/";
 
-    public static void main(String[] args) {
+    private String imageSrcPath;
+    private String croppedImageName;
+
+    FaceDetection(String imgSrcPath) {
+	this.imageSrcPath = Utils.replaceBacklashWithDouble(imgSrcPath);
+	String txtFileName = Utils.timestampFileName();
+	this.croppedImageName = txtFileName.substring(0, txtFileName.lastIndexOf('.')) + ".png";
+    }
+
+    public void detectFace() {
 	nu.pattern.OpenCV.loadShared();
 
 	CascadeClassifier faceDetector = new CascadeClassifier();
-	faceDetector.load("haarcascade_frontalface_alt.xml");
+	faceDetector.load(CASECADE_CLASSIFIER_XML);
+
+	LOGGER.info(imageSrcPath);
 
 	// Input image
-	Mat image = Imgcodecs.imread("D:\\Downloads\\testimage.jpg");
+	Mat image = Imgcodecs.imread(imageSrcPath);
 
 	// Detecting faces
 	MatOfRect faceDetections = new MatOfRect();
@@ -39,17 +55,18 @@ public class FaceDetection {
 
 	// Saving the cropped image
 	Mat markedImage = new Mat(image, rectCrop);
-	Imgcodecs.imwrite("./data.log/cropped.images/croppedimg.png", markedImage);
-	
-	// Converting the cropped image to base 64
+	Imgcodecs.imwrite(CROPPED_IMG_PATH + croppedImageName, markedImage);
+    }
+
+    public String convertedImageToBase64() {
 	byte[] bytes = null;
 	try {
-	    bytes = FileUtils.readFileToByteArray(new File("./data.log/cropped.images/croppedimg.png"));
+	    bytes = FileUtils.readFileToByteArray(new File(CROPPED_IMG_PATH + croppedImageName));
 	} catch (IOException e) {
-	    e.printStackTrace();
+	    LOGGER.log(Level.WARNING, "Exception found!", e);
 	}
 	String encodedData = Base64.getEncoder().encodeToString(bytes);
-	System.out.println(encodedData);
-
+	LOGGER.info(encodedData);
+	return encodedData;
     }
 }

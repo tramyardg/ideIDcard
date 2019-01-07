@@ -25,7 +25,7 @@ import com.opencsv.bean.HeaderColumnNameMappingStrategy;
 public class ImageDataCSV {
 
     private final Logger LOGGER = Logger.getLogger(ImageDataCSV.class.getName());
-    private final String CSV_DATA_PATH = "./data.log/csvdata.xlsx";
+    private final String CSV_DATA_PATH = "./data.log/csvdata.csv";
 
     public void csvToBean() {
 	CSVReader reader = null;
@@ -88,7 +88,7 @@ public class ImageDataCSV {
 	while (it.hasNext()) {
 	    ImageData imgData = it.next();
 	    records.add(new String[] { imgData.getId(), imgData.getDateProcessed(), imgData.getImagePath(),
-		    imgData.getImageContent() });
+		    imgData.getImageContent(), imgData.getCroppedImg() });
 	}
 	return records;
     }

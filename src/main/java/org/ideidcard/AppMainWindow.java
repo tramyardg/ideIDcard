@@ -119,17 +119,17 @@ public class AppMainWindow {
 	}
     }
 
-    private String readImage(String imageLocation) {
-	ITesseract instance = new Tesseract();
-	try {
-	    return instance.doOCR(new File(imageLocation));
-	} catch (TesseractException e) {
-	    e.getMessage();
-	    return "Error while reading image";
-	}
-    }
-    
     class SelectImage implements SelectionListener {
+	private String readImage(String imageLocation) {
+	    ITesseract instance = new Tesseract();
+	    try {
+		return instance.doOCR(new File(imageLocation));
+	    } catch (TesseractException e) {
+		e.getMessage();
+		return "Error while reading image";
+	    }
+	}
+
 	public void widgetSelected(SelectionEvent event) {
 	    FileDialog openImageDialog = new FileDialog(shell, SWT.OPEN);
 	    openImageDialog.setText("Open");
@@ -229,10 +229,14 @@ public class AppMainWindow {
 	    String content = extractedText.getText();
 
 	    ImageData data = new ImageData();
-	    data.setId(fileName.substring(0, fileName.lastIndexOf('.')));
+	    data.setId(fileName.substring(0, fileName.lastIndexOf('.')).trim());
 	    data.setDateProcessed(dateProcessed);
 	    data.setImagePath(path);
 	    data.setImageContent(content);
+
+	    FaceDetection fd = new FaceDetection(path);
+	    fd.detectFace();
+	    data.setCroppedImg(fd.convertedImageToBase64());
 
 	    List<ImageData> imgDataList = new ArrayList<>();
 	    imgDataList.add(data);
