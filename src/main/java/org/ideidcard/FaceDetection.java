@@ -1,5 +1,10 @@
 package org.ideidcard;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.Base64;
+
+import org.apache.commons.io.FileUtils;
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfRect;
 import org.opencv.core.Point;
@@ -32,12 +37,19 @@ public class FaceDetection {
 	    rectCrop = new Rect(rect.x, rect.y, rect.width, rect.height);
 	}
 
-	// Saving the output image
-	String filename = "Ouput.jpg";
-	Imgcodecs.imwrite("D:\\Downloads\\" + filename, image);
-
+	// Saving the cropped image
 	Mat markedImage = new Mat(image, rectCrop);
-	Imgcodecs.imwrite("D:\\Downloads\\cropimage.jpg", markedImage);
+	Imgcodecs.imwrite("./data.log/cropped.images/croppedimg.png", markedImage);
 	
+	// Converting the cropped image to base 64
+	byte[] bytes = null;
+	try {
+	    bytes = FileUtils.readFileToByteArray(new File("./data.log/cropped.images/croppedimg.png"));
+	} catch (IOException e) {
+	    e.printStackTrace();
+	}
+	String encodedData = Base64.getEncoder().encodeToString(bytes);
+	System.out.println(encodedData);
+
     }
 }

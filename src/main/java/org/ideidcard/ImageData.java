@@ -6,16 +6,12 @@ public class ImageData {
     private String dateProcessed;
     private String imagePath;
     private String imageContent;
+    private String croppedImg;
 
     public ImageData() {
     }
 
-    public ImageData(String dateProcessed, String imagePath, String imageContent) {
-	this.dateProcessed = dateProcessed;
-	this.imagePath = imagePath;
-	this.imageContent = imageContent;
-    }
-
+  
     public ImageData(String id, String dateProcessed, String imagePath, String imageContent) {
 	this.id = id;
 	this.dateProcessed = dateProcessed;
@@ -23,6 +19,15 @@ public class ImageData {
 	this.imageContent = imageContent;
     }
 
+    public ImageData(String id, String dateProcessed, String imagePath, String imageContent, String croppedImg) {
+  	this.id = id;
+  	this.dateProcessed = dateProcessed;
+  	this.imagePath = imagePath;
+  	this.imageContent = imageContent;
+  	this.croppedImg = croppedImg;
+      }
+
+    
     public String getId() {
 	return id;
     }
@@ -54,7 +59,15 @@ public class ImageData {
     public void setImageContent(String imageContent) {
 	this.imageContent = imageContent;
     }
+    
+    public String getCroppedImg() {
+	return croppedImg;
+    }
 
+    public void setCroppedImg(String croppedImg) {
+	this.croppedImg = croppedImg;
+    }
+    
     @Override
     public String toString() {
 	return "{" + id + "::" + dateProcessed + "::" + imagePath + "::" + imageContent + "}";

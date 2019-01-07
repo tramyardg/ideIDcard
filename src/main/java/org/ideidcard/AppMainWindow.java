@@ -224,12 +224,12 @@ public class AppMainWindow {
 	@Override
 	public void widgetSelected(SelectionEvent arg0) {
 	    String fileName = Utils.timestampFileName();
-	    String dateProcessed = fileName.substring(0, fileName.indexOf(".")).trim();
+	    String dateProcessed = fileName.substring(0, fileName.indexOf('.')).trim();
 	    String path = lblSelectedImageDirectorySub.getText();
 	    String content = extractedText.getText();
 
 	    ImageData data = new ImageData();
-	    data.setId("4");
+	    data.setId(fileName.substring(0, fileName.lastIndexOf('.')));
 	    data.setDateProcessed(dateProcessed);
 	    data.setImagePath(path);
 	    data.setImageContent(content);

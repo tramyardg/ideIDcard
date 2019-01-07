@@ -25,7 +25,7 @@ import com.opencsv.bean.HeaderColumnNameMappingStrategy;
 public class ImageDataCSV {
 
     private final Logger LOGGER = Logger.getLogger(ImageDataCSV.class.getName());
-    private final String CSV_DATA_PATH = "./data.log/testcsv3.csv";
+    private final String CSV_DATA_PATH = "./data.log/csvdata.xlsx";
 
     public void csvToBean() {
 	CSVReader reader = null;
