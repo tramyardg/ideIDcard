@@ -2,7 +2,6 @@
 .project
 .settings/
 target/
-data.log/
 pom.xml.tag
 pom.xml.releaseBackup
 pom.xml.versionsBackup

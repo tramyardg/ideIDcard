@@ -1,5 +1,5 @@
 # Image data extraction for ID cards
-Extracts data from images of identity document (ID) cards. Data can be saved and used for later.
+Extracts data easily from identity cards, such as passport, student id, or medicare card. User saves time spent on manual entry of information which prevents quality assurance issues.
 ![app image demo](https://github.com/tramyardg/ideIDcard/blob/master/app-demo.png)
 
 ### Dependencies
