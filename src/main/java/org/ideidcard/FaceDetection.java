@@ -23,11 +23,21 @@ public class FaceDetection {
 
     private String imageSrcPath;
     private String croppedImageName;
+    private boolean isFaceDetected;
+    
+    public boolean isFaceDetected() {
+        return isFaceDetected;
+    }
+
+    public void setFaceDetected(boolean isFaceDetected) {
+        this.isFaceDetected = isFaceDetected;
+    }
 
     FaceDetection(String imgSrcPath) {
 	this.imageSrcPath = Utils.replaceBacklashWithDouble(imgSrcPath);
 	String txtFileName = Utils.timestampFileName();
 	this.croppedImageName = txtFileName.substring(0, txtFileName.lastIndexOf('.')) + ".png";
+	this.isFaceDetected = false;
     }
 
     public void detectFace() {
@@ -40,7 +50,7 @@ public class FaceDetection {
 
 	// Input image
 	Mat image = Imgcodecs.imread(imageSrcPath);
-
+	
 	// Detecting faces
 	MatOfRect faceDetections = new MatOfRect();
 	faceDetector.detectMultiScale(image, faceDetections);
@@ -53,9 +63,12 @@ public class FaceDetection {
 	    rectCrop = new Rect(rect.x, rect.y, rect.width, rect.height);
 	}
 
-	// Saving the cropped image
-	Mat markedImage = new Mat(image, rectCrop);
-	Imgcodecs.imwrite(CROPPED_IMG_PATH + croppedImageName, markedImage);
+	if (rectCrop != null) {
+	    setFaceDetected(true);
+	    // Saving the cropped image
+	    Mat markedImage = new Mat(image, rectCrop);
+	    Imgcodecs.imwrite(CROPPED_IMG_PATH + croppedImageName, markedImage);
+	}
     }
 
     public String convertedImageToBase64() {

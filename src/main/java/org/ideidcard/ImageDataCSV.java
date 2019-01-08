@@ -31,14 +31,11 @@ public class ImageDataCSV {
 	CSVReader reader = null;
 	try {
 	    reader = new CSVReader(new FileReader(CSV_DATA_PATH), ',');
-
 	    HeaderColumnNameMappingStrategy<ImageData> headerColumnNameStrategy = new HeaderColumnNameMappingStrategy<>();
 	    headerColumnNameStrategy.setType(ImageData.class);
 	    CsvToBean<ImageData> csvToBean = new CsvToBean<>();
 	    List<ImageData> imgDataList = csvToBean.parse(headerColumnNameStrategy, reader);
-
-	    System.out.println(imgDataList);
-
+	    logger.info(imgDataList.toString());
 	} catch (IOException e) {
 	    logger.log(Level.WARNING, "Exception found!", e);
 	} finally {
@@ -55,10 +52,8 @@ public class ImageDataCSV {
 	try {
 	    reader = new CSVReader(new FileReader(CSV_DATA_PATH), ',');
 	    List<ImageData> imgDataList = new ArrayList<>();
-
 	    List<String[]> records = reader.readAll();
 	    Iterator<String[]> iterator = records.iterator();
-
 	    while (iterator.hasNext()) {
 		String[] record = iterator.next();
 		ImageData imgData = new ImageData();
@@ -68,9 +63,6 @@ public class ImageDataCSV {
 		imgData.setImageContent(record[3]);
 		imgDataList.add(imgData);
 	    }
-
-	    System.out.println(imgDataList);
-
 	} catch (IOException e) {
 	    logger.log(Level.WARNING, "Exception found!", e);
 	} finally {
@@ -93,24 +85,18 @@ public class ImageDataCSV {
 	return records;
     }
 
-    public StringWriter writer(List<ImageData> imgDataList) {
+    public void saveDataAsCSV(List<ImageData> imgDataList) {
 	StringWriter writer = new StringWriter();
 	try {
 	    CSVWriter csvWriter = new CSVWriter(writer, ',');
 	    List<String[]> data = toStringArray(imgDataList);
 	    csvWriter.writeAll(data);
 	    csvWriter.close();
-	    return writer;
 	} catch (IOException e) {
 	    logger.log(Level.WARNING, "Exception found!", e);
-	    return null;
 	}
-    }
-
-    public void saveDataAsCSV(String str) {
-	byte[] data = str.getBytes();
-	Path p = null;
-	p = Paths.get(CSV_DATA_PATH);
+	byte[] data = writer.toString().getBytes();
+	Path p = Paths.get(CSV_DATA_PATH);
 	try (OutputStream out = new BufferedOutputStream(Files.newOutputStream(p, CREATE, APPEND))) {
 	    out.write(data, 0, data.length);
 	} catch (IOException x) {

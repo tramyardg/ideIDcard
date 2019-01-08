@@ -236,13 +236,15 @@ public class AppMainWindow {
 
 	    FaceDetection fd = new FaceDetection(path);
 	    fd.detectFace();
-	    data.setCroppedImg(fd.convertedImageToBase64());
-
+	    if (fd.isFaceDetected()) {
+		data.setCroppedImg(fd.convertedImageToBase64());
+	    }
+	    
 	    List<ImageData> imgDataList = new ArrayList<>();
 	    imgDataList.add(data);
 
 	    ImageDataCSV imgToCSV = new ImageDataCSV();
-	    imgToCSV.saveDataAsCSV(imgToCSV.writer(imgDataList).toString());
+	    imgToCSV.saveDataAsCSV(imgDataList);
 
 	    logger.info(data.toString());
 	}
